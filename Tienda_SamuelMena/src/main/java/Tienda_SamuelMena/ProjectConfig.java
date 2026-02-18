@@ -38,7 +38,7 @@ public class ProjectConfig implements WebMvcConfigurer {
     @Bean
     public SpringResourceTemplateResolver templateResolver_0() {
         SpringResourceTemplateResolver resolver = new SpringResourceTemplateResolver();
-        resolver.setPrefix("classpath:/templates");
+        resolver.setPrefix("classpath:/templates/"); // con barra final
         resolver.setSuffix(".html");
         resolver.setTemplateMode(TemplateMode.HTML);
         resolver.setOrder(0);
@@ -48,8 +48,8 @@ public class ProjectConfig implements WebMvcConfigurer {
 
     @Bean
     public LocaleResolver localeResolver() {
-        var slr = new SessionLocaleResolver();
-        slr.setDefaultLocale(Locale.getDefault());
+        SessionLocaleResolver slr = new SessionLocaleResolver();
+        slr.setDefaultLocale(new Locale("es"));  
         slr.setLocaleAttributeName("session.current.locale");
         slr.setTimeZoneAttributeName("session.current.timezone");
         return slr;
@@ -70,8 +70,11 @@ public class ProjectConfig implements WebMvcConfigurer {
     @Bean("messageSource")
     public MessageSource messageSource() {
         ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
-        messageSource.setBasename("messages");
+        messageSource.setBasename("messages"); // 
         messageSource.setDefaultEncoding("UTF-8");
         return messageSource;
     }
+
 }
+
+

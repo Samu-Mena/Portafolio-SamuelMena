@@ -239,6 +239,18 @@
                 </div>
             </div>
         </section>
+        <script>
+            var confirmModal = document.getElementById('confirmModal');
+            confirmModal.addEventListener('show.bs.modal', function (event) {
 
+                var button = event.relatedTarget;
+
+                var id = button.getAttribute('data-bs-id');
+                var descripcion = button.getAttribute('data-bs-descripcion');
+
+                document.getElementById('modalId').value = id;
+                document.getElementById('modalDescripcion').textContent = descripcion;
+            });
+        </script>
     </body>
 </html>

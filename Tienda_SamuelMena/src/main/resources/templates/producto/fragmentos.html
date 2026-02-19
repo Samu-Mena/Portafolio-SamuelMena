@@ -106,18 +106,67 @@
                                             <td class="text-center">[[${p.existencias}]]</td>
                                             <td class="text-end">[[${#numbers.formatCurrency(p.precio*p.existencias)}]]</td>
                                             <td><img th:src="@{${p.rutaImagen}}" alt="noData" height="75"/></td>
-                                            <td>[[${p.categoria.descripcion}]]</td>
+                                            <td>[[${p.categoria.descripcion}]]</td> 
+
                                             <td th:text="${p.activo} ? 'Activa':'Inactiva'"></td>
                                             <td sec:authorize="hasRole('ROLE_ADMIN')">
+                                                <!-- Agregue esto para que me funcionara el boton de eliminar -->
+                                                <!-- BOTÓN ELIMINAR -->
                                                 <button type="button" class="btn btn-danger"
-                                                        data-bs-toggle="modal" data-bs-target="#confirmModal"
-                                                        th:data-bs-id="${p.idProducto}"
-                                                        th:data-bs-descripcion="${p.descripcion}">
+                                                        data-bs-toggle="modal"
+                                                        th:data-bs-target="'#confirmModal' + ${p.idProducto}">
                                                     <i class="fa-solid fa-trash"></i> [[#{accion.eliminar}]]
-                                                </button>                                           
-                                                <a th:href="@{/producto/modificar/}+${p.idProducto}" class="btn btn-warning">
+                                                </button>
+                                                <!-- MODAL INDIVIDUAL -->
+                                                <div class="modal fade"
+                                                     th:id="'confirmModal' + ${p.idProducto}"
+                                                     tabindex="-1">
+                                                    <div class="modal-dialog">
+                                                        <div class="modal-content">
+                                                            <form th:action="@{/producto/eliminar}" method="post">
+                                                                <input type="hidden"
+                                                                       name="idProducto"
+                                                                       th:value="${p.idProducto}"/>
+                                                                <div class="modal-header bg-warning text-white">
+                                                                    <h5 class="modal-title">
+                                                                        Confirmar eliminación
+                                                                    </h5>
+                                                                    <button type="button" class="btn-close"
+                                                                            data-bs-dismiss="modal"></button>
+                                                                </div>
+                                                                <div class="modal-body">
+                                                                    ¿Desea eliminar el producto
+                                                                    <strong th:text="${p.descripcion}"></strong>?
+                                                                </div>
+                                                                <div class="modal-footer">
+                                                                    <button type="submit" class="btn btn-danger">
+                                                                        Eliminar
+                                                                    </button>
+                                                                    <button type="button"
+                                                                            class="btn btn-secondary"
+                                                                            data-bs-dismiss="modal">
+                                                                        Cancelar
+                                                                    </button>
+                                                                </div>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <!-- BOTÓN EDITAR -->
+                                                <a th:href="@{/producto/modificar/}+${p.idProducto}"
+                                                   class="btn btn-warning">
                                                     <i class="fas fa-pencil-alt"></i> [[#{accion.actualizar}]]
                                                 </a>
+                                                <!--Tuve que eliminar el boton de eliminar que daba la clase porque no me funcionaba
+                                                <button type="button" class="btn btn-danger"
+                                                         data-bs-toggle="modal" data-bs-target="#confirmModal"
+                                                         th:data-bs-id="${p.idProducto}"
+                                                         th:data-bs-descripcion="${p.descripcion}">
+                                                     <i class="fa-solid fa-trash"></i> [[#{accion.eliminar}]]
+                                                 </button>                                           
+                                                 <a th:href="@{/producto/modificar/}+${p.idProducto}" class="btn btn-warning">
+                                                     <i class="fas fa-pencil-alt"></i> [[#{accion.actualizar}]]
+                                                 </a> AQUÍ TERMINA EL BOTON DE ELIMINAR DE LA CLASE -->
                                             </td>
                                         </tr>
                                     </tbody>
@@ -239,18 +288,20 @@
                 </div>
             </div>
         </section>
-        <script>
-            var confirmModal = document.getElementById('confirmModal');
-            confirmModal.addEventListener('show.bs.modal', function (event) {
 
-                var button = event.relatedTarget;
-
-                var id = button.getAttribute('data-bs-id');
-                var descripcion = button.getAttribute('data-bs-descripcion');
-
-                document.getElementById('modalId').value = id;
-                document.getElementById('modalDescripcion').textContent = descripcion;
-            });
-        </script>
+        <!-- Fragmento para mostrar Toast, tuve que meterlo a ver si me sirve -->
+        <section th:fragment="mostrarToast">
+            <div class="toast-container position-fixed bottom-0 end-0 p-3">
+                <div id="liveToast" class="toast" role="alert">
+                    <div class="toast-header">
+                        <strong class="me-auto">Notificación</strong>
+                        <button type="button" class="btn-close" data-bs-dismiss="toast"></button>
+                    </div>
+                    <div class="toast-body">
+                        Operación realizada correctamente.
+                    </div>
+                </div>
+            </div>
+        </section>
     </body>
 </html>

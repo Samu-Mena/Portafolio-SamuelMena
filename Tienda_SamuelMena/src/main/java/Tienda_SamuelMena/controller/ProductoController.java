@@ -21,11 +21,11 @@ import java.util.Locale;
 import java.util.Optional;
 
 @Controller
-@RequestMapping("/producto") // en minúscula
+@RequestMapping("/producto") 
 public class ProductoController {
 
     @Autowired
-    private ProductoService productoService; // en minúscula
+    private ProductoService productoService; 
 
     @Autowired
     private CategoriaService categoriaService;
@@ -42,7 +42,7 @@ public class ProductoController {
         var categorias = categoriaService.getCategorias(true);
         model.addAttribute("categorias", categorias);
 
-        model.addAttribute("producto", new Producto()); // 👈 ESTA ES LA LÍNEA QUE FALTA
+        model.addAttribute("producto", new Producto()); 
 
         return "producto/listado";
     }

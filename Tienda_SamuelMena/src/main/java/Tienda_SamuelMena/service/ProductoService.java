@@ -14,8 +14,7 @@ import java.util.Optional;
 import java.io.IOException;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.dao.DataIntegrityViolationException;
-
-
+import java.math.BigDecimal;
 
 
 @Service
@@ -69,6 +68,21 @@ public class ProductoService {
             // Lanza una nueva excepción para encapsular el problema de integridad de datos
             throw new IllegalStateException("No se puede eliminar la categoría. Tiene datos asociados.", e);
         }
+    }
+
+    @Transactional(readOnly = true)
+    public List<Producto> consultaDerivada(BigDecimal precioInf, BigDecimal precioSup) {
+        return ProductoRepository.findByPrecioBetweenOrderByPrecioAsc(precioInf, precioSup);
+    }
+
+    @Transactional(readOnly = true)
+    public List<Producto> consultaJPQL(BigDecimal precioInf, BigDecimal precioSup) {
+        return ProductoRepository.consultaJPQL(precioInf, precioSup);
+    }
+
+    @Transactional(readOnly = true)
+    public List<Producto> consultaSQL(BigDecimal precioInf, BigDecimal precioSup) {
+        return ProductoRepository.consultaSQL(precioInf, precioSup);
     }
 
 }

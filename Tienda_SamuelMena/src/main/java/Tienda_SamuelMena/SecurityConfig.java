@@ -2,11 +2,13 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-
 package Tienda_SamuelMena;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -43,7 +45,7 @@ public class SecurityConfig {
     public static final String[] USUARIO_URLS = {
         "/facturar/carrito"
     };
-
+/*
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(request -> request
@@ -53,36 +55,37 @@ public class SecurityConfig {
                 .requestMatchers(USUARIO_URLS).hasRole("USUARIO")
                 .anyRequest().authenticated()
         )
-        .formLogin(form -> form
+                .formLogin(form -> form
                 .loginPage("/login")
                 .loginProcessingUrl("/login")
                 .defaultSuccessUrl("/", true)
                 .failureUrl("/login?error=true")
                 .permitAll()
-        )
-        .logout(logout -> logout
+                )
+                .logout(logout -> logout
                 .logoutUrl("/logout")
                 .logoutSuccessUrl("/login?logout=true")
                 .invalidateHttpSession(true)
                 .deleteCookies("JSESSIONID")
                 .permitAll()
-        )
-        .exceptionHandling(exceptions -> exceptions
+                )
+                .exceptionHandling(exceptions -> exceptions
                 .accessDeniedPage("/acceso_denegado")
-        )
-        .sessionManagement(session -> session
+                )
+                .sessionManagement(session -> session
                 .maximumSessions(1)
                 .maxSessionsPreventsLogin(false)
-        );
+                );
 
         return http.build();
     }
-
+*/
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-
+    
+/*
     @Bean
     public UserDetailsService users(PasswordEncoder passwordEncoder) {
 
@@ -106,6 +109,14 @@ public class SecurityConfig {
 
         return new InMemoryUserDetailsManager(admin, sales, user);
     }
+*/
+
+    @Autowired
+public void configureGlobal(AuthenticationManagerBuilder build,
+    @Lazy PasswordEncoder passwordEncoder,
+    @Lazy UserDetailsService userDetailsService) throws Exception {
+    build.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder);
 }
 
 
+}
